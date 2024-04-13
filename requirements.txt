@@ -1,0 +1,8 @@
+crewai==0.22.5
+crewai-tools==0.0.15
+langchain-groq==0.0.1
+pydantic==2.6.3
+python-docx==1.1.0
+python-dotenv==1.0.0
+reportlab==4.1.0
+streamlit==1.32.2
