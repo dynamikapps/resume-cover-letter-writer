@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from tools import ResumeFormattingTool, CoverLetterFormattingTool
 from langchain_groq import ChatGroq
 
+
 class ResumeAgent(Agent, BaseModel):
     name: str
     email: str
@@ -67,7 +68,8 @@ class ResumeAgent(Agent, BaseModel):
 
         crew = Crew(agents=[self], tasks=[task], process=Process.sequential)
         result = crew.kickoff()
-        return result
+        formatted_resume = ResumeFormattingTool()._run(result)
+        return formatted_resume
 
 
 class CoverLetterAgent(Agent, BaseModel):
@@ -132,4 +134,5 @@ class CoverLetterAgent(Agent, BaseModel):
 
         crew = Crew(agents=[self], tasks=[task], process=Process.sequential)
         result = crew.kickoff()
-        return result
+        formatted_cover_letter = CoverLetterFormattingTool()._run(result)
+        return formatted_cover_letter

@@ -1,5 +1,6 @@
 from crewai import Task
 
+
 class ResumeTask(Task):
     def __init__(self, description, expected_output, agent):
         super().__init__(
