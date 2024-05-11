@@ -101,10 +101,10 @@ class CoverLetterAgent(Agent, BaseModel):
             goal=self.goal,
             backstory=self.backstory,
             tools=[CoverLetterFormattingTool()],
-            llm=ChatGroq(
-                api_key=os.getenv("GROQ_API_KEY"),
-                model="mixtral-8x7b-32768"
-            ),
+            # llm=ChatGroq(
+            #     api_key=os.getenv("GROQ_API_KEY"),
+            #     model="mixtral-8x7b-32768"
+            # ),
             verbose=True
         )
 
