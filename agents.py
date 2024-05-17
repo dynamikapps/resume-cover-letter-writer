@@ -2,7 +2,7 @@ import os
 from crewai import Agent, Task, Crew, Process
 from pydantic import BaseModel
 from tools import ResumeFormattingTool, CoverLetterFormattingTool
-from langchain_groq import ChatGroq
+# from langchain_groq import ChatGroq
 
 
 class ResumeAgent(Agent, BaseModel):
@@ -34,14 +34,17 @@ class ResumeAgent(Agent, BaseModel):
             goal=self.goal,
             backstory=self.backstory,
             tools=[ResumeFormattingTool()],
-            llm=ChatGroq(
-                api_key=os.getenv("GROQ_API_KEY"),
-                model="mixtral-8x7b-32768"
-            ),
+            # llm=ChatGroq(
+            #     api_key=os.getenv("GROQ_API_KEY"),
+            #     model=os.getenv("GROQ_MODEL_NAME")
+            # ),
             verbose=True
         )
 
     def generate_resume(self):
+        with open("templates/resume_template.md", "r") as file:
+            template = file.read()
+
         task = Task(
             description=(
                 f"Create a highly detailed and comprehensive resume for {self.name} based on their work experience, education, skills, and the job description:\n\n"
@@ -62,7 +65,7 @@ class ResumeAgent(Agent, BaseModel):
                 "6. Awards and Achievements: A list of any awards, honors, or special recognition the candidate has received.\n"
                 "Ensure that the resume is well-structured, visually appealing, and tailored to the target job description."
             ),
-            expected_output="A highly detailed and well-structured resume in plain text, covering all relevant sections and tailored to the target job.",
+            expected_output=template,
             agent=self
         )
 
@@ -103,12 +106,15 @@ class CoverLetterAgent(Agent, BaseModel):
             tools=[CoverLetterFormattingTool()],
             # llm=ChatGroq(
             #     api_key=os.getenv("GROQ_API_KEY"),
-            #     model="mixtral-8x7b-32768"
+            #     model=os.getenv("GROQ_MODEL_NAME")
             # ),
             verbose=True
         )
 
     def generate_cover_letter(self):
+        with open("templates/cover_letter_template.md", "r") as file:
+            template = file.read()
+
         task = Task(
             description=(
                 f"Write a highly personalized and compelling cover letter for {self.name} based on their work experience, education, skills, and the job description:\n\n"
@@ -128,7 +134,7 @@ class CoverLetterAgent(Agent, BaseModel):
                 "5. Closing: A strong closing paragraph that reiterates the candidate's interest, thanks the reader for their consideration, and expresses a desire for an interview.\n"
                 "Ensure that the cover letter is well-written, persuasive, and tailored to the specific job and company."
             ),
-            expected_output="A highly personalized and compelling cover letter in plain text, demonstrating the candidate's fit and enthusiasm for the role.",
+            expected_output=template,
             agent=self
         )
 

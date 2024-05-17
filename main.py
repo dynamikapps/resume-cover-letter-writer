@@ -97,48 +97,62 @@ def main():
                 try:
                     if search_button:
                         # Perform job search
-                        search_results = indeed_client.search_jobs(job_query, job_location)
+                        search_results = indeed_client.search_jobs(
+                            job_query, job_location)
                         jobs = search_results.get("hits", [])
                         st.session_state.jobs = jobs
                     else:
                         jobs = st.session_state.jobs
 
                     if jobs:
-                        selected_job_index = st.sidebar.selectbox("Select a Job", range(len(jobs)), format_func=lambda i: jobs[i]["title"])
+                        selected_job_index = st.sidebar.selectbox("Select a Job", range(
+                            len(jobs)), format_func=lambda i: jobs[i]["title"])
                         selected_job = jobs[selected_job_index]
                         selected_job_id = selected_job["id"]
 
                         # Get job details
-                        job_details = indeed_client.get_job_details(selected_job_id)
+                        job_details = indeed_client.get_job_details(
+                            selected_job_id)
                         job_description = job_details.get("description", "")
                         job_url = job_details.get("indeed_final_url", "")
 
                         st.sidebar.subheader("Job Details")
-                        st.sidebar.markdown(f"**Company:** {selected_job['company_name']}")
-                        st.sidebar.markdown(f"**Title:** {selected_job['title']}")
-                        st.sidebar.markdown(f"**Location:** {selected_job['location']}")
+                        st.sidebar.markdown(
+                            f"**Company:** {selected_job['company_name']}")
+                        st.sidebar.markdown(
+                            f"**Title:** {selected_job['title']}")
+                        st.sidebar.markdown(
+                            f"**Location:** {selected_job['location']}")
                         if selected_job.get("salary"):
-                            salary_type = selected_job["salary"].get("type", "").capitalize()
+                            salary_type = selected_job["salary"].get(
+                                "type", "").capitalize()
                             salary_min = selected_job["salary"].get("min", "")
                             salary_max = selected_job["salary"].get("max", "")
-                            st.sidebar.markdown(f"**Salary:** {salary_min} - {salary_max} ({salary_type})")
+                            st.sidebar.markdown(
+                                f"**Salary:** {salary_min} - {salary_max} ({salary_type})")
 
                         st.sidebar.subheader("Job Description")
                         display_html_description(job_description)
 
                         # Add Job Description button
                         if st.sidebar.button("Add Job Description"):
-                            st.session_state.job_description = job_description
-                            st.sidebar.success("Job description added to the form.")
+                            if "job_description" not in st.session_state:
+                                st.session_state.job_description = ""
+                            st.session_state.job_description += job_description
+                            st.sidebar.success(
+                                "Job description added to the form.")
 
                         # Apply on Indeed button
                         if job_url:
                             if st.sidebar.button("Apply on Indeed"):
-                                st.sidebar.markdown(f'<a href="{job_url}" target="_blank">Apply on Indeed</a>', unsafe_allow_html=True)
+                                st.sidebar.markdown(
+                                    f'<a href="{job_url}" target="_blank">Apply on Indeed</a>', unsafe_allow_html=True)
                     else:
-                        st.sidebar.warning("No jobs found. Please refine your search.")
+                        st.sidebar.warning(
+                            "No jobs found. Please refine your search.")
                 except Exception as e:
-                    st.sidebar.error(f"An error occurred while searching for jobs: {str(e)}")
+                    st.sidebar.error(
+                        f"An error occurred while searching for jobs: {str(e)}")
 
     # Main page layout
     st.title("📝 Generated Documents")
